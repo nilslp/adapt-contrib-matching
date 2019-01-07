@@ -1,7 +1,7 @@
 define([
   'libraries/select2'
 ], function() {
-/*
+  /*
    * issue/1543: fix from https://github.com/select2/select2/issues/4063
    */
   var dropdownAdapter;

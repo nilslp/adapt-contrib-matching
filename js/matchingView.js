@@ -7,7 +7,7 @@ define([
   var MatchingView = QuestionView.extend({
 
     disableQuestion: function() {
-      this.$('select').prop('disabled', true).select2();
+      this.$('.js-matching-select').prop('disabled', true).select2();
     },
 
     setupSelect2: function() {
@@ -17,11 +17,11 @@ define([
         this.disableQuestion();
       }
       _.bindAll(this, 'onOptionSelected');
-      this.$('select').on('select2:select', this.onOptionSelected);
+      this.$('.js-matching-select').on('select2:select', this.onOptionSelected);
     },
 
     enableQuestion: function() {
-      this.$('select').prop('disabled', false).select2({
+      this.$('.js-matching-select').prop('disabled', false).select2({
         placeholder: this.model.get('placeholder'),
         minimumResultsForSearch: Infinity, // hides the search box from the Select2 dropdown
         dir: Adapt.config.get('_defaultDirection'),
@@ -40,8 +40,8 @@ define([
     },
 
     onPreRemove: function() {
-      this.$('select').off('select2:select', this.onOptionSelected);
-      this.$('select').select2('destroy');
+      this.$('.js-matching-select').off('select2:select', this.onOptionSelected);
+      this.$('.js-matching-select').select2('destroy');
     },
 
     onQuestionRendered: function() {
@@ -50,19 +50,19 @@ define([
     },
 
     onCannotSubmit: function() {
-      this.$('select').each(function addErrorClass(index, element) {
+      this.$('.js-matching-select').each(function addErrorClass(index, element) {
         if (element.selectedIndex > 0) return;
 
         var $element = $(element);
-        var $container = $element.parents('.matching-select-container');
-        $container.addClass('error');
+        var $container = $element.parents('.matching__select-container');
+        $container.addClass('has-error');
         // ensure the error class gets removed when the user selects a valid option
         var evt = "select2:select.errorclear";
         var $select = $element.parent();
         $select.off(evt);// prevent multiple event bindings if the user repeatedly clicks submit without first making a selection
         $select.on(evt, function(e) {
           if (e.params.data.element.index > 0) {
-            $container.removeClass('error');
+            $container.removeClass('has-error');
             $select.off(evt);
           }
         });
@@ -70,7 +70,7 @@ define([
     },
 
     onOptionSelected: function(e) {
-      var itemIndex = $(e.target).parents('.matching-item').index();
+      var itemIndex = $(e.target).parents('.matching__item').index();
       var optionIndex = $(e.params.data.element).index() - 1;
       this.model.setOptionSelected(itemIndex, optionIndex, true);
     },
@@ -80,14 +80,14 @@ define([
 
       this.model.get('_items').forEach(function(item, i) {
 
-        var $item = this.$('.matching-item').eq(i);
-        $item.removeClass('correct incorrect').addClass(item._isCorrect ? 'correct' : 'incorrect');
+        var $item = this.$('.matching__item').eq(i);
+        $item.removeClass('is-correct is-incorrect').addClass(item._isCorrect ? 'is-correct' : 'is-incorrect');
       }, this);
     },
 
     resetQuestion: function() {
 
-      this.$('.matching-item').removeClass('correct incorrect');
+      this.$('.matching__item').removeClass('is-correct is-incorrect');
 
       this.model.set('_isAtLeastOneCorrectSelection', false);
 
@@ -136,7 +136,7 @@ define([
      */
     selectValue: function(i, value) {
       value = $.trim(value);// select2 strips leading/trailing spaces so we need to as well - fixes https://github.com/adaptlearning/adapt_framework/issues/1503
-      this.$('select').eq(i).val(value).trigger('change');
+      this.$('.js-matching-select').eq(i).val(value).trigger('change');
     }
   });
 
