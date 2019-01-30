@@ -1,4 +1,4 @@
-<div class="component__inner matching__inner">
+<div class="component__inner matching__inner" role="region" aria-label="{{_globals._components._matching.ariaRegion}}" {{#if _globals._components._matching.ariaRegion}}tabindex="0"{{/if}}>
 
   {{> component this}}
 
@@ -9,7 +9,7 @@
 
       <div class="matching__item-title">
         <div class="matching__item-title_inner">
-          {{{text}}}
+          {{{a11y_text text}}}
         </div>
       </div>
 
